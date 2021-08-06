@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'jacoco'
 	id 'java'
 }
 
@@ -28,4 +29,35 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.7
+			}
+		}
+
+		rule {
+			enabled = false
+			element = 'CLASS'
+			includes = ['org.gradle.*']
+
+			limit {
+				counter = 'LINE'
+				value = 'TOTALCOUNT'
+				maximum = 0.3
+			}
+		}
+	}
+}
+
+check {
+	finalizedBy jacocoTestCoverageVerification
 }
